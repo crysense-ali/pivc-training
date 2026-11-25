@@ -1,0 +1,8 @@
+FROM python:3.11-slim
+WORKDIR /app
+COPY . .
+# The GitHub web uploader adds numeric prefixes (1-app.py, 2-content.py, ...). Strip them.
+# 1-content.py is the newest content file: keep it and apply it last.
+RUN cp 1-content.py /tmp/content.py && for f in [0-9]*-*; do mv "$f" "${f#*-}"; done && cp /tmp/content.py content.py && pip install --no-cache-dir -r requirements.txt
+ENV PORT=10000
+CMD gunicorn -b 0.0.0.0:$PORT app:app
