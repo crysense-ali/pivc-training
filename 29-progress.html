@@ -1,0 +1,26 @@
+{% extends "base.html" %}{% block body %}
+<h2>{{ t('welcome') }}</h2><p class="muted">{{ t('local_note') }}</p>
+<div class="panel"><p>{{ t('overall') }}: <b id="ov"></b></p><div class="bar2"><i id="bar" style="width:0"></i></div><p class="muted" id="sum"></p></div>
+<h3>{{ t('modules') }}</h3><div id="mods"></div>
+<h3>{{ t('sim') }}</h3><div id="sim"></div>
+<h3>{{ t('puzzle') }}</h3><div id="pz"></div>
+<h3>{{ t('checklist') }}</h3><div id="sa"></div>
+<p><a class="btn" href="{{ url_for('checklist') }}">{{ t('assess_new') }}</a> <button class="btn alt" id="rs">{{ t('reset') }}</button></p>
+{% endblock %}
+{% block js %}<script>
+const M={{ mods_json|safe }},N={{ n }};const D=Store.get();
+const NO={{ t('no_data')|tojson }};
+function fm(ts){const d=new Date(ts);return d.toLocaleString({{ ('ar-EG' if L=='ar' else 'en-GB')|tojson }},{dateStyle:'short',timeStyle:'short'});}
+function row(a,b,c){const d=document.createElement('div');d.className='row';const x=document.createElement('span');x.textContent=a;const y=document.createElement('b');y.textContent=b;if(c)y.className='ok';d.append(x,y);return d;}
+function fill(id,items){const e=document.getElementById(id);if(!items.length){e.innerHTML='<p class="muted">'+NO+'</p>';return;}items.forEach(i=>e.appendChild(i));}
+let done=0;fill('mods',M.map(m=>{const q=D.quiz[m.id];const ok=q&&q.best>=m.total;if(ok)done++;
+ return row(m.title,q?q.best+'/'+m.total+' · {{ t('attempts') }} '+q.attempts:'-',ok);}));
+fill('sim',D.sim.map(s=>row(fm(s.ts),s.score+'/'+(s.total||N)+(s.crit?' · ⚠ '+s.crit:''),s.score===(s.total||N))));
+fill('pz',D.puzzle.map(s=>row(fm(s.ts),s.correct+'/'+s.total+' · {{ t('moves') }} '+s.moves,s.correct===s.total)));
+fill('sa',D.sa.map(s=>row(fm(s.ts),s.pct+'% · '+(s.ok?{{ t('competent')|tojson }}:{{ t('notyet')|tojson }}),s.ok)));
+const bs=Math.max(0,...D.sim.map(s=>s.score)),lp=D.sa.length?D.sa[0].pct:0;
+const ov=Math.round(100*(done/M.length+bs/N+lp/100)/3);
+document.getElementById('ov').textContent=ov+'%';document.getElementById('bar').style.width=ov+'%';
+document.getElementById('sum').textContent={{ t('completed')|tojson }}+': '+done+' {{ t('of') }} '+M.length+' · {{ t('sim_best') }}: '+bs+' {{ t('of') }} '+N+' · {{ t('checklist') }}: '+lp+'%';
+document.getElementById('rs').onclick=()=>{if(confirm({{ t('reset_q')|tojson }})){Store.reset();location.reload();}};
+</script>{% endblock %}

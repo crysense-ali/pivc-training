@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% block body %}
+<h2>🧩 {{ t('puzzle') }}</h2><p class="muted">{{ t('puz_help') }}</p>
+<ol id="list" class="pz"></ol>
+<p><button class="btn" id="chk">{{ t('check') }}</button> <button class="btn alt" id="shf">{{ t('shuffle') }}</button></p>
+<p id="msg" class="result"></p>
+{% endblock %}{% block js %}<style>.pz{padding:0;list-style:none}.pz li{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid #dde;border-radius:10px;padding:8px;margin:6px 0;cursor:grab}
+.pz li.good{border-color:#2a9d57;background:#e6f7ec}.pz li.bad{border-color:#c33;background:#fdeaea}.pz span.t{flex:1}.pz button{border:1px solid #99a;background:#f0f4f4;border-radius:6px;font-size:18px;width:38px;height:38px;cursor:pointer}</style>
+<script>
+const S={{ steps_json|safe }};const T={ok:{{ t('solved')|tojson }},sc:{{ t('puz_score')|tojson }},of:{{ t('of')|tojson }}};
+let order=[],moves=0,drag=null;
+function shuffle(){order=S.map(s=>s.id);do{for(let k=order.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[order[k],order[j]]=[order[j],order[k]];}}while(order.every((v,k)=>v===k));moves=0;document.getElementById('msg').textContent='';render();}
+function mv(a,b){if(b<0||b>=order.length)return;const x=order.splice(a,1)[0];order.splice(b,0,x);moves++;render();}
+function render(res){const ol=document.getElementById('list');ol.innerHTML='';
+ order.forEach((id,k)=>{const li=document.createElement('li');li.draggable=true;
+  if(res){li.className=(id===k)?'good':'bad';}
+  li.innerHTML='<b>'+(k+1)+'.</b><span class="t"></span>';li.querySelector('.t').textContent=S[id].text;
+  const up=document.createElement('button');up.textContent='▲';up.onclick=()=>mv(k,k-1);
+  const dn=document.createElement('button');dn.textContent='▼';dn.onclick=()=>mv(k,k+1);
+  li.append(up,dn);
+  li.addEventListener('dragstart',()=>{drag=k});li.addEventListener('dragover',e=>e.preventDefault());
+  li.addEventListener('drop',e=>{e.preventDefault();if(drag!==null&&drag!==k)mv(drag,k);drag=null});
+  ol.appendChild(li);});}
+document.getElementById('chk').onclick=()=>{const c=order.filter((id,k)=>id===k).length;render(true);
+ const m=document.getElementById('msg');m.className='result '+(c===S.length?'ok':'err');
+ m.textContent=c===S.length?'✓ '+T.ok:c+' '+T.of+' '+S.length+' '+T.sc;
+ Store.add('puzzle',{correct:c,moves:moves,total:S.length});};
+document.getElementById('shf').onclick=shuffle;shuffle();
+</script>{% endblock %}

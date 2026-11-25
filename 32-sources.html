@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block body %}<h2>{{ t('refs') }}</h2>
+<ul class="refs">{% for r in refs %}<li>{{ r[0] }}<br><a href="{{ r[1] }}" target="_blank" rel="noopener" dir="ltr">{{ r[1] }}</a></li>{% endfor %}</ul>{% endblock %}

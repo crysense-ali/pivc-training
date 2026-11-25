@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block body %}<h2>{{ t('nursing') }}</h2><p class="muted">{{ t('nanda_note') }}</p>
+{% for it in items %}<div class="panel"><h3>{{ it[0] if L=='en' else it[1] }}</h3><p>{{ it[2] if L=='en' else it[3] }}</p></div>{% endfor %}{% endblock %}

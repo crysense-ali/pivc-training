@@ -1,0 +1,20 @@
+:root{--p:#0b7a75;--bg:#f4f8f8}*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,"Segoe UI",Tahoma,"Noto Naskh Arabic","Noto Sans Arabic",Arial,sans-serif;background:var(--bg);color:#1c2b2b;line-height:1.6}
+header{background:var(--p);color:#fff}.bar{max-width:900px;margin:auto;padding:8px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.brand{color:#fff;font-weight:700;text-decoration:none}nav{display:flex;flex-wrap:wrap;gap:10px}nav a{color:#fff;text-decoration:none;font-size:14px}
+.lang{background:#fff;color:var(--p)!important;padding:2px 10px;border-radius:12px;font-weight:700}
+main{max-width:900px;margin:auto;padding:14px}footer{max-width:900px;margin:20px auto;padding:12px;color:#5a6b6b;font-size:13px;text-align:center}
+.hero{background:#fff;border-radius:12px;padding:18px;margin-bottom:14px}.hero h1{font-size:22px;margin:0 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.card,.row,.panel{background:#fff;border-radius:10px;padding:12px;margin:8px 0;color:inherit;text-decoration:none;display:block;box-shadow:0 1px 2px #0001}
+.row{display:flex;justify-content:space-between;gap:8px}.narrow{max-width:420px;margin:auto}
+.btn{display:inline-block;background:var(--p);color:#fff;border:0;border-radius:8px;padding:10px 16px;font-size:16px;text-decoration:none;cursor:pointer;margin:4px 0;font-family:inherit}
+.btn.alt{background:#fff;color:var(--p);border:1px solid var(--p)}
+label{display:block;margin:8px 0}input,textarea{width:100%;padding:9px;border:1px solid #bcd;border-radius:8px;font-size:16px;font-family:inherit}
+input[type=radio]{width:auto}label.opt,label.inl{display:block;padding:8px;border:1px solid #dde;border-radius:8px;margin:5px 0}label.inl{display:inline-block;margin:3px 3px}
+.opt.good{background:#dff5e6;border-color:#2a9d57}.opt.bad{background:#fde1e1;border-color:#c33}
+.btnopt{display:block;width:100%;text-align:start;background:#fff;border:1px solid #bbc;padding:10px;border-radius:8px;margin:6px 0;font-size:15px;font-family:inherit;cursor:pointer}
+.ok{color:#17803d}.err{color:#b3261e}.result{font-weight:700;font-size:18px}.muted{color:#5a6b6b;font-size:14px}
+.tag{background:#fde1e1;color:#b3261e;border-radius:6px;padding:1px 6px;font-size:12px}
+.bar2{background:#dde;border-radius:8px;height:12px;overflow:hidden}.bar2 i{display:block;height:100%;background:var(--p)}
+.refs li{margin:10px 0;word-break:break-word}

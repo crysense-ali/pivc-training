@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block body %}<h2>{{ t('modules') }}</h2>
+{% for m in modules %}<a class="row" href="{{ url_for('module', mid=m.id) }}"><span>{{ m.title[L] }}</span><b data-mod="{{ m.id }}" data-n="{{ m.quiz|length }}"></b></a>{% endfor %}
+{% endblock %}{% block js %}<script>
+const D=Store.get();document.querySelectorAll('[data-mod]').forEach(e=>{const q=D.quiz[e.dataset.mod];if(q){const ok=q.best>=+e.dataset.n;e.textContent=ok?'✓ {{ t('done') }}':q.best+'/'+e.dataset.n;if(ok)e.className='ok';}});
+</script>{% endblock %}
