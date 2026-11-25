@@ -1,0 +1,7 @@
+FROM python:3.11-slim
+WORKDIR /app
+COPY . .
+# The GitHub web uploader adds numeric prefixes (1-app.py, 2-content.py, ...). Strip them.
+RUN for f in [0-9]*-*; do mv "$f" "${f#*-}"; done && pip install --no-cache-dir -r requirements.txt
+ENV PORT=10000
+CMD gunicorn -b 0.0.0.0:$PORT app:app

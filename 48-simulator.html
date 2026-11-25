@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% block body %}
+<h2>{{ t('sim') }}</h2>
+<div class="panel"><p class="muted" id="prog"></p><p><b>{{ t('next_step') }}</b></p><div id="opts"></div><div id="fb"></div>
+<div id="end" style="display:none"></div></div>
+{% endblock %}{% block js %}<script>
+const STEPS={{ steps_json|safe }}; const T={correct:{{ t('correct')|tojson }},wrong:{{ t('wrong')|tojson }},crit:{{ t('why_critical')|tojson }},res:{{ t('score')|tojson }},again:{{ t('again')|tojson }},of:{{ t('of')|tojson }},step:{{ t('step')|tojson }}};
+let i=0,score=0,crit=0;
+function shuffle(a){for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]];}return a;}
+function show(){
+ if(i>=STEPS.length){return finish();}
+ document.getElementById('prog').textContent=T.step+' '+(i+1)+' '+T.of+' '+STEPS.length;
+ document.getElementById('fb').innerHTML='';
+ let wrong=shuffle(STEPS.map((s,k)=>k).filter(k=>k!==i)).slice(0,2);
+ let ch=shuffle([i,...wrong]);
+ const box=document.getElementById('opts'); box.innerHTML='';
+ ch.forEach(k=>{const b=document.createElement('button');b.className='opt btnopt';b.textContent=STEPS[k].text;b.onclick=()=>pick(k);box.appendChild(b);});
+}
+function pick(k){
+ const ok=k===i; const fb=document.getElementById('fb');
+ document.querySelectorAll('#opts button').forEach(b=>b.disabled=true);
+ if(ok){score++;fb.innerHTML='<p class="ok">✓ '+T.correct+'</p>';}
+ else{ if(STEPS[i].crit)crit++; fb.innerHTML='<p class="err">✗ '+T.wrong+'<br><b></b></p>'+(STEPS[i].crit?'<p class="err">⚠ '+T.crit+'</p>':''); fb.querySelector('b').textContent=STEPS[i].text; }
+ const n=document.createElement('button');n.className='btn';n.textContent='→';n.onclick=()=>{i++;show();};fb.appendChild(n);
+}
+function finish(){
+ document.getElementById('opts').innerHTML='';document.getElementById('fb').innerHTML='';document.getElementById('prog').textContent='';
+ const e=document.getElementById('end');e.style.display='block';
+ e.innerHTML='<h3>'+T.res+': '+score+' '+T.of+' '+STEPS.length+'</h3><p><a class="btn" href="">'+T.again+'</a></p>';
+ Store.add('sim',{score:score,crit:crit,total:STEPS.length});
+}
+show();
+</script>{% endblock %}

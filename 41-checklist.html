@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% block body %}
+<h2>{{ t('checklist') }} · {{ t('self') }}</h2><p class="muted">{{ t('pass_rule') }}</p>
+<p id="res" class="result"></p>
+<form id="cf">
+{% for s in steps %}{% set k = loop.index0 %}
+<div class="panel"><p><b>{{ loop.index }}. {{ s[0] if L=='en' else s[1] }}</b> {% if s[2] %}<span class="tag">{{ t('critical') }}</span>{% endif %}</p>
+<label class="inl"><input type="radio" name="s{{ k }}" value="c" required> {{ t('competent') }}</label>
+<label class="inl"><input type="radio" name="s{{ k }}" value="n"> {{ t('needs') }}</label>
+<label class="inl"><input type="radio" name="s{{ k }}" value="x"> {{ t('notdone') }}</label></div>
+{% endfor %}
+<button class="btn">{{ t('save') }}</button></form>{% endblock %}
+{% block js %}<script>
+const CR={{ crit_json|safe }};
+document.getElementById('cf').addEventListener('submit',e=>{e.preventDefault();
+ const r=CR.map((c,k)=>document.querySelector('input[name=s'+k+']:checked').value);
+ const n=r.filter(x=>x==='c').length,pct=Math.round(100*n/r.length);
+ const ok=CR.every((c,k)=>!c||r[k]==='c')&&pct>=80;
+ const m=document.getElementById('res');m.className='result '+(ok?'ok':'err');
+ m.textContent={{ t('result')|tojson }}+': '+(ok?{{ t('competent')|tojson }}:{{ t('notyet')|tojson }})+' ('+pct+'%)';
+ Store.add('sa',{pct:pct,ok:ok});window.scrollTo(0,0);});
+</script>{% endblock %}

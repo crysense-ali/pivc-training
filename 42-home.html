@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block body %}
+<section class="hero"><h1>{{ t('title') }}</h1><p>{{ t('tagline') }}</p>
+<p><a class="btn" href="{{ url_for('modules') }}">{{ t('start') }}</a></p></section>
+<div class="grid">
+<a class="card" href="{{ url_for('modules') }}"><h3>📚 {{ t('modules') }}</h3><p>{{ modules|length }}</p></a>
+<a class="card" href="{{ url_for('simulator') }}"><h3>🎯 {{ t('sim') }}</h3></a>
+<a class="card" href="{{ url_for('puzzle') }}"><h3>🧩 {{ t('puzzle') }}</h3></a>
+<a class="card" href="{{ url_for('checklist') }}"><h3>✅ {{ t('checklist') }}</h3></a>
+<a class="card" href="{{ url_for('progress') }}"><h3>📈 {{ t('my') }}</h3></a>
+</div>{% endblock %}

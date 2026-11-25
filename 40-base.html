@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="{{ L }}" dir="{{ dir }}">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ t('app') }}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body>
+<header><div class="bar">
+ <a class="brand" href="{{ url_for('home') }}">🩺 {{ t('app') }}</a>
+ <nav>
+  <a href="{{ url_for('modules') }}">{{ t('modules') }}</a>
+  <a href="{{ url_for('simulator') }}">{{ t('sim') }}</a>
+  <a href="{{ url_for('puzzle') }}">{{ t('puzzle') }}</a>
+  <a href="{{ url_for('checklist') }}">{{ t('checklist') }}</a>
+  <a href="{{ url_for('nursing') }}">{{ t('nursing') }}</a>
+  <a href="{{ url_for('sources') }}">{{ t('refs') }}</a>
+  <a href="{{ url_for('progress') }}">{{ t('my') }}</a>
+  <a class="lang" href="{{ url_for('setlang') }}">{{ t('lang') }}</a>
+ </nav></div></header>
+<main>{% block body %}{% endblock %}</main>
+<footer>{{ t('demo_note') }}<br>{{ t('local_note') }}</footer><script src="{{ url_for('static', filename='store.js') }}"></script>{% block js %}{% endblock %}
+</body></html>

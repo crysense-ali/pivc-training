@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% block body %}
+<h2>{{ m.title[L] }}</h2>
+<div class="panel"><ul>{% for b in m.body[L] %}<li>{{ b }}</li>{% endfor %}</ul></div>
+<h3>{{ t('quiz') }}</h3>
+<form id="qf">
+{% for q in m.quiz %}{% set qi = loop.index0 %}
+<div class="panel"><p><b>{{ q.q[L] }}</b></p>
+{% for o in q.o %}<label class="opt" data-q="{{ qi }}" data-o="{{ loop.index0 }}"><input type="radio" name="q{{ qi }}" value="{{ loop.index0 }}" required> {{ o[L] }}</label>{% endfor %}</div>
+{% endfor %}
+<p id="res" class="result"></p>
+<button class="btn" id="sub">{{ t('submit') }}</button>
+{% if nxt %} <a class="btn alt" href="{{ url_for('module', mid=nxt.id) }}">{{ nxt.title[L] }}</a>{% endif %}
+</form>{% endblock %}
+{% block js %}<script>
+const Q={{ quiz_json|safe }};const MID={{ m.id|tojson }};
+document.getElementById('qf').addEventListener('submit',e=>{e.preventDefault();let s=0;
+ document.querySelectorAll('label.opt').forEach(l=>l.classList.remove('good','bad'));
+ Q.forEach((q,i)=>{const sel=document.querySelector('input[name=q'+i+']:checked');const v=sel?+sel.value:-1;if(v===q.a)s++;
+  document.querySelector('label[data-q="'+i+'"][data-o="'+q.a+'"]').classList.add('good');
+  if(v!==q.a&&v>=0)document.querySelector('label[data-q="'+i+'"][data-o="'+v+'"]').classList.add('bad');});
+ const ok=s===Q.length;const r=document.getElementById('res');r.className='result '+(ok?'ok':'err');
+ r.textContent={{ t('score')|tojson }}+': '+s+' {{ t('of') }} '+Q.length+' · '+(ok?{{ t('pass')|tojson }}:{{ t('not_pass')|tojson }});
+ Store.quiz(MID,s,Q.length);document.getElementById('sub').textContent={{ t('again')|tojson }};});
+</script>{% endblock %}
